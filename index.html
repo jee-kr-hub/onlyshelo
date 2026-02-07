@@ -165,11 +165,18 @@ function handleNo(){
 }
 
 function moveButton(){
-  const w=btnRow.clientWidth-noBtn.offsetWidth;
-  const h=btnRow.clientHeight-noBtn.offsetHeight;
+  const card = document.querySelector(".card");
 
-  noBtn.style.left=Math.random()*w+"px";
-  noBtn.style.top=Math.random()*h+"px";
+  const paddingTop = 90; // keep away from question text
+
+  const w = card.clientWidth - noBtn.offsetWidth - 20;
+  const h = card.clientHeight - noBtn.offsetHeight - paddingTop;
+
+  const x = Math.random() * w;
+  const y = Math.random() * h + paddingTop;
+
+  noBtn.style.left = x + "px";
+  noBtn.style.top = y + "px";
 }
 </script>
 
