@@ -21,7 +21,7 @@
       background: linear-gradient(135deg,#ffdde1,#ee9ca7);
     }
 
-    /* Floating hearts */
+    /* ❤️ Floating hearts */
     .heart {
       position: absolute;
       bottom: -20px;
@@ -35,38 +35,47 @@
       to { transform: translateY(-110vh); opacity:0; }
     }
 
-    /* Card */
+    /* 🌸 Card */
     .card {
       position: relative;
-      width: 360px;
-      height: 320px;
+      width: 90vw;          /* responsive width */
+      max-width: 420px;    /* desktop limit */
+      min-height: 300px;
+
       background: rgba(255,255,255,0.25);
       backdrop-filter: blur(14px);
       border-radius: 25px;
-      padding: 30px;
-      box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+
+      padding: 40px 25px;
       text-align: center;
       overflow: hidden;
+
+      box-shadow: 0 20px 50px rgba(0,0,0,0.2);
     }
 
+    /* Bigger text */
     h1 {
       color: white;
-      font-size: 24px;
-      margin-bottom: 50px;
+      font-size: 26px;
+      margin-bottom: 45px;
+      line-height: 1.4;
     }
 
+    /* Buttons */
     .btn {
-      padding: 12px 26px;
-      border-radius: 25px;
+      padding: 14px 32px;
+      border-radius: 30px;
       border: none;
-      font-size: 16px;
+      font-size: 18px;
       cursor: pointer;
+      margin: 10px;
       transition: 0.6s ease;
     }
 
     #yes {
       background: #ff4d6d;
       color: white;
+      box-shadow: 0 0 15px #ff4d6d;
     }
 
     #yes:hover {
@@ -80,7 +89,14 @@
 
     .btnRow {
       position: relative;
-      height: 120px;
+      height: 150px;
+    }
+
+    /* 📱 Extra mobile boost */
+    @media (max-width: 480px) {
+      h1 { font-size: 30px; }
+      .btn { font-size: 20px; padding: 16px 36px; }
+      .card { padding: 50px 25px; }
     }
 
   </style>
@@ -91,14 +107,12 @@
 <div id="hearts"></div>
 
 <div class="card">
-
   <h1 id="question">Will you forgive me? 🥺</h1>
 
   <div class="btnRow">
     <button class="btn" id="yes">Yes ❤️</button>
     <button class="btn" id="no">No 😒</button>
   </div>
-
 </div>
 
 <script>
@@ -108,18 +122,17 @@
   const hearts = document.getElementById("hearts");
   const btnRow = document.querySelector(".btnRow");
 
-  /* Floating hearts */
+  /* floating hearts */
   setInterval(() => {
     const heart = document.createElement("div");
     heart.className = "heart";
     heart.innerText = "❤️";
     heart.style.left = Math.random()*100 + "vw";
-    heart.style.fontSize = (15 + Math.random()*20) + "px";
+    heart.style.fontSize = (16 + Math.random()*20) + "px";
     heart.style.animationDuration = (5 + Math.random()*5) + "s";
     hearts.appendChild(heart);
     setTimeout(()=>heart.remove(),8000);
   }, 300);
-
 
   const messages = [
     "Think once please 😔",
@@ -133,14 +146,10 @@
 
   yesBtn.onclick = () => {
     document.body.innerHTML =
-      "<h1 style='color:white;text-align:center'>Thank you for forgiving me ❤️<br>I love you 🫶</h1>";
+      "<h1 style='color:white;text-align:center;font-size:32px'>Thank you for forgiving me ❤️<br>I love you 🫶</h1>";
   };
 
   noBtn.onclick = () => handleNo();
-
-  noBtn.addEventListener("mouseover", () => {
-    if (window.innerWidth > 768) handleNo();
-  });
 
   function handleNo() {
     noCount++;
@@ -153,16 +162,16 @@
     }
   }
 
-  /* FIXED movement (inside card only) */
+  /* stays inside card */
   function moveButton() {
-    const areaWidth = btnRow.clientWidth - noBtn.offsetWidth - 10;
-    const areaHeight = btnRow.clientHeight - noBtn.offsetHeight - 10;
+    const w = btnRow.clientWidth - noBtn.offsetWidth - 10;
+    const h = btnRow.clientHeight - noBtn.offsetHeight - 10;
 
-    const x = Math.random() * areaWidth;
-    const y = Math.random() * areaHeight;
+    const x = Math.random()*w;
+    const y = Math.random()*h;
 
-    noBtn.style.left = x + "px";
-    noBtn.style.top = y + "px";
+    noBtn.style.left = x+"px";
+    noBtn.style.top = y+"px";
   }
 
   moveButton();
