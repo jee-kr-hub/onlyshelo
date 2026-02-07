@@ -3,6 +3,9 @@
 <head>
   <title>Only Shelo ❤️</title>
 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Font -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 
   <style>
@@ -21,13 +24,13 @@
       background:linear-gradient(135deg,#ffdde1,#ee9ca7);
     }
 
-    /* ❤️ Floating hearts */
+    /* floating hearts background */
     .heart{
       position:absolute;
       bottom:-20px;
       animation:floatUp 8s linear infinite;
-      opacity:.7;
       pointer-events:none;
+      opacity:.7;
     }
 
     @keyframes floatUp{
@@ -35,7 +38,7 @@
       to{transform:translateY(-110vh);}
     }
 
-    /* Card */
+    /* card */
     .card{
       width:92vw;
       max-width:420px;
@@ -54,13 +57,12 @@
       margin-bottom:40px;
     }
 
-    /* Button row */
     .btnRow{
       display:flex;
       justify-content:center;
       gap:15px;
       position:relative;
-      height:140px;
+      height:150px;
     }
 
     .btn{
@@ -75,7 +77,7 @@
     #yes{
       background:#ff4d6d;
       color:white;
-      box-shadow:0 0 18px #ff4d6d;
+      box-shadow:0 0 15px #ff4d6d;
     }
 
     #yes:hover{
@@ -84,18 +86,53 @@
 
     #no{
       background:#eee;
-    }
-
-    /* when moving */
-    .absolute{
       position:absolute;
     }
 
-    /* extra mobile boost */
+    /* final screen */
+    .finalScreen{
+      height:100vh;
+      width:100vw;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      align-items:center;
+      background:linear-gradient(135deg,#ff9a9e,#fad0c4);
+      overflow:hidden;
+      position:relative;
+      text-align:center;
+    }
+
+    .lovePhoto{
+      width:80%;
+      max-width:320px;
+      border-radius:20px;
+      box-shadow:0 15px 40px rgba(0,0,0,.3);
+      margin-bottom:25px;
+    }
+
+    .loveText{
+      color:white;
+      font-size:26px;
+    }
+
+    .kiss{
+      position:absolute;
+      top:-20px;
+      font-size:24px;
+      animation:kissFall 6s linear forwards;
+      pointer-events:none;
+    }
+
+    @keyframes kissFall{
+      to{transform:translateY(110vh);opacity:0;}
+    }
+
     @media(max-width:480px){
       h1{font-size:30px;}
       .btn{font-size:20px;}
     }
+
   </style>
 </head>
 
@@ -113,27 +150,27 @@
 </div>
 
 <script>
-const question = document.getElementById("question");
-const noBtn = document.getElementById("no");
-const yesBtn = document.getElementById("yes");
-const btnRow = document.querySelector(".btnRow");
-const hearts = document.getElementById("hearts");
+const question=document.getElementById("question");
+const yesBtn=document.getElementById("yes");
+const noBtn=document.getElementById("no");
+const hearts=document.getElementById("hearts");
+const btnRow=document.querySelector(".btnRow");
 
-let firstMove = false;
-let noCount = 0;
+let firstMove=false;
+let noCount=0;
 
 /* floating hearts */
 setInterval(()=>{
-  const heart=document.createElement("div");
-  heart.className="heart";
-  heart.innerText="❤️";
-  heart.style.left=Math.random()*100+"vw";
-  heart.style.fontSize=(16+Math.random()*20)+"px";
-  hearts.appendChild(heart);
-  setTimeout(()=>heart.remove(),8000);
+  const h=document.createElement("div");
+  h.className="heart";
+  h.innerText="❤️";
+  h.style.left=Math.random()*100+"vw";
+  h.style.fontSize=(16+Math.random()*20)+"px";
+  hearts.appendChild(h);
+  setTimeout(()=>h.remove(),8000);
 },300);
 
-/* change messages */
+/* messages */
 const messages=[
   "Think once please 😔",
   "Twin please 🥺",
@@ -142,17 +179,25 @@ const messages=[
   "Only Yes allowed now 😌"
 ];
 
+/* YES CLICK → photo + kisses */
 yesBtn.onclick=()=>{
-  document.body.innerHTML="<h1 style='color:white;text-align:center'>Thank you for forgiving me ❤️<br>I love you 🫶</h1>";
+  document.body.innerHTML=`
+    <div class="finalScreen">
+      <img src="photo.jpg" class="lovePhoto">
+      <h1 class="loveText">Thank you for forgiving me ❤️<br>I love you so much 🫶</h1>
+      <div id="kisses"></div>
+    </div>
+  `;
+  startKisses();
 };
 
+/* NO click */
 noBtn.onclick=()=>handleNo();
 
 function handleNo(){
   noCount++;
 
   if(!firstMove){
-    noBtn.classList.add("absolute"); // becomes movable only after first click
     firstMove=true;
   }
 
@@ -164,46 +209,31 @@ function handleNo(){
   }
 }
 
-function moveButton() {
-  const card = document.querySelector(".card");
-  const yesRect = yesBtn.getBoundingClientRect();
-  const cardRect = card.getBoundingClientRect();
+/* movement inside card only */
+function moveButton(){
+  const card=document.querySelector(".card");
+  const w=card.clientWidth-noBtn.offsetWidth;
+  const h=card.clientHeight-noBtn.offsetHeight-80;
 
-  const paddingTop = 120; // avoid question text
-  const safeGap = 20;     // space around yes button
+  noBtn.style.left=Math.random()*w+"px";
+  noBtn.style.top=Math.random()*h+80+"px";
+}
 
-  const maxX = card.clientWidth - noBtn.offsetWidth - 10;
-  const maxY = card.clientHeight - noBtn.offsetHeight - paddingTop;
+/* falling kisses */
+function startKisses(){
+  const container=document.getElementById("kisses");
 
-  let x, y;
-
-  do {
-    x = Math.random() * maxX;
-    y = Math.random() * maxY + paddingTop;
-
-    // check overlap with YES button
-    const noLeft = x + cardRect.left;
-    const noRight = noLeft + noBtn.offsetWidth;
-    const noTop = y + cardRect.top;
-    const noBottom = noTop + noBtn.offsetHeight;
-
-    const overlap =
-      !(noRight < yesRect.left - safeGap ||
-        noLeft > yesRect.right + safeGap ||
-        noBottom < yesRect.top - safeGap ||
-        noTop > yesRect.bottom + safeGap);
-
-    if (!overlap) break;
-
-  } while (true);
-
-  noBtn.style.left = x + "px";
-  noBtn.style.top = y + "px";
+  setInterval(()=>{
+    const k=document.createElement("div");
+    k.className="kiss";
+    k.innerText="💋";
+    k.style.left=Math.random()*100+"vw";
+    k.style.fontSize=(20+Math.random()*20)+"px";
+    container.appendChild(k);
+    setTimeout(()=>k.remove(),6000);
+  },200);
 }
 </script>
 
 </body>
 </html>
-    
-
-
