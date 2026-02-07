@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Please Forgive Me ❤️</title>
+
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg,#ffd6e0,#fff5f7);
+      font-family: Arial, sans-serif;
+      overflow: hidden;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 38px;
+      margin-bottom: 40px;
+    }
+
+    .btn {
+      padding: 14px 30px;
+      font-size: 18px;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      margin: 10px;
+      transition: 0.2s;
+    }
+
+    #yes {
+      background: #ff4d6d;
+      color: white;
+    }
+
+    #yes:hover {
+      transform: scale(1.1);
+    }
+
+    #no {
+      background: #ccc;
+      position: absolute;
+    }
+
+    .container {
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <h1 id="question">Will you forgive me? 🥺</h1>
+
+  <button class="btn" id="yes">Yes ❤️</button>
+  <button class="btn" id="no">No 😒</button>
+
+</div>
+
+<script>
+  const question = document.getElementById("question");
+  const noBtn = document.getElementById("no");
+  const yesBtn = document.getElementById("yes");
+
+  let noCount = 0;
+
+  const messages = [
+    "Think about it once 😔",
+    "Baby man jao na 🥺",
+    "Pleaseeee 😭",
+    "Okay last chance 😭❤️"
+  ];
+
+  yesBtn.onclick = () => {
+    document.body.innerHTML =
+      "<h1>Thank you for forgiving me ❤️<br>I promise I'll do better 🫶</h1>";
+  };
+
+  noBtn.onclick = () => handleNo();
+
+  noBtn.addEventListener("mouseover", () => {
+    if (window.innerWidth > 768) handleNo();
+  });
+
+  function handleNo() {
+    noCount++;
+
+    if (noCount <= messages.length) {
+      question.innerText = messages[noCount - 1];
+      moveButton();
+    } else {
+      noBtn.style.display = "none";
+    }
+  }
+
+  function moveButton() {
+    const x = Math.random() * (window.innerWidth - 120);
+    const y = Math.random() * (window.innerHeight - 60);
+
+    noBtn.style.left = x + "px";
+    noBtn.style.top = y + "px";
+  }
+
+  moveButton();
+</script>
+
+</body>
+</html>
