@@ -203,17 +203,51 @@ function handleNo(){
 }
 
 /* movement only lower half (never overlaps YES) */
-function moveButton(){
-  const w=btnRow.clientWidth-noBtn.offsetWidth;
-  const h=btnRow.clientHeight-noBtn.offsetHeight-20;
+let lastX = 0;
+let lastY = 0;
 
-  const x=Math.random()*w;
-  const y=Math.random()*h+70;
+function moveButton() {
+  const yesRect = yesBtn.getBoundingClientRect();
+  const cardRect = btnRow.getBoundingClientRect();
 
-  noBtn.style.left=x+"px";
-  noBtn.style.top=y+"px";
+  const safeGap = 25; // space around YES
+  const minJump = 80; // minimum distance jump (makes it far)
+
+  let x, y, tries = 0;
+
+  do {
+    x = Math.random() * (btnRow.clientWidth - noBtn.offsetWidth);
+    y = Math.random() * (btnRow.clientHeight - noBtn.offsetHeight) + 70;
+
+    const dx = Math.abs(x - lastX);
+    const dy = Math.abs(y - lastY);
+
+    const noLeft = x + cardRect.left;
+    const noRight = noLeft + noBtn.offsetWidth;
+    const noTop = y + cardRect.top;
+    const noBottom = noTop + noBtn.offsetHeight;
+
+    const overlapYes =
+      !(noRight < yesRect.left - safeGap ||
+        noLeft > yesRect.right + safeGap ||
+        noBottom < yesRect.top - safeGap ||
+        noTop > yesRect.bottom + safeGap);
+
+    const farEnough = (dx + dy) > minJump;
+
+    tries++;
+
+    if (!overlapYes && farEnough) break;
+
+  } while (tries < 50);
+
+  lastX = x;
+  lastY = y;
+
+  noBtn.style.transition = "none"; // instant jump (faster)
+  noBtn.style.left = x + "px";
+  noBtn.style.top = y + "px";
 }
-
 /* MANY kisses */
 function startKisses(){
   const container=document.getElementById("kisses");
